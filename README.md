@@ -3,48 +3,38 @@ A simple Node.JS module to access and normalize data from the
 [OMDb API](http://www.omdbapi.com/) by Bryan Fritz.
 
 ## Installation
-    $ npm install omdb
-
+```bash
+npm install --save omdb
+```
 ## Examples
 
 ```javascript
 var omdb = require('omdb');
 
 omdb.search('saw', function(err, movies) {
-    if(err) {
-        return console.error(err);
-    }
-
-    if(movies.length < 1) {
-        return console.log('No movies were found!');
+    if(err || movies.length < 1) {
+        return new Error('No movies found');
     }
 
     movies.forEach(function(movie) {
-        console.log('%s (%d)', movie.title, movie.year);
+        console.log(movie);
     });
-
-    // Saw (2004)
-    // Saw II (2005)
-    // Saw III (2006)
-    // Saw IV (2007)
-    // ...
 });
 
 omdb.get({ title: 'Saw', year: 2004 }, true, function(err, movie) {
-    if(err) {
-        return console.error(err);
+    if(err || !movie) {
+        return new Error('Movie not found');
     }
 
-    if(!movie) {
-        return console.log('Movie not found!');
+    console.log(movie);
+});
+
+omdb.get({ title: 'Game of Thrones', season: 5, episode: 7 }, function (err, episode) {
+    if(err || !episode) {
+        return new Error('Episode not found');
     }
 
-    console.log('%s (%d) %d/10', movie.title, movie.year, movie.imdb.rating);
-    console.log(movie.plot);
-
-    // Saw (2004) 7.6/10
-    // Two men wake up at opposite sides of a dirty, disused bathroom, chained
-    // by their ankles to pipes. Between them lies...
+    console.log(episode);
 });
 ```
 
@@ -81,35 +71,21 @@ is empty. The array will contain objects of the following:
 }
 ```
 
-### omdb.get(show, [fullPlot], callback)
-Run a single movie request on the API.
+### omdb.get(terms, callback)
+Run a single media request on the API.
 
-`show` is assumed to be one of the following, respectively:
+`terms` is assumed to be one of the following, respectively:
 
-1. An object with an `imdb` property.
-
-    `{ imdb: 'tt0387564' }`
-2. An object with a `title` property.
-
-    `{ title: 'Saw' }`
-3. An object with *both* a `title` and a `year` property.
-
-    `{ title: 'Saw', year: 2004 }`
-4. An IMDb ID string.
-
-    `'tt0387564'`
-5. A title string.
-
-    `'Saw'`
-
-`fullPlot` is an optional argument that if set to `true`, will attempt to
-request the extended version of the movie's plot.
+```javascript
+{ imdb: 'tt0387564' }
+{ title: 'Saw' }
+{ title: 'Saw', year: 2004 }
+{ title: 'Game of Thrones', season: 1 }
+{ title: 'Game of Thrones', season: 1, episode: 2 }
+```
 
 `callback` returns an object of the movie's information. If no movies are
 found, it will return `null`.
-
-See the following for a list of possible properties:
-https://github.com/misterhat/omdb/blob/master/index.js#L154
 
 ### omdb.poster(show)
 Return a readable stream of the poster JPEG.
