@@ -1,16 +1,17 @@
 {
-  "name": "omdb",
-  "version": "0.2.4",
-  "author": "Mister Hat <misterhat144@gmail.com>",
+  "name": "clams-omdb",
+  "version": "0.2.5",
+  "author": "anault",
   "description": "A module to access OMDb API.",
   "keywords": [
     "omdb",
     "imdb",
-    "movies"
+    "movies",
+    "tvshows"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/misterhat/omdb.git"
+    "url": "https://github.com/LesClams/omdb.git"
   },
   "license": "MIT",
   "main": "index.js",
@@ -21,9 +22,9 @@
     "tap": "^0.4.13"
   },
   "bugs": {
-    "url": "https://github.com/misterhat/omdb/issues"
+    "url": "https://github.com/LesClams/omdb/issues"
   },
-  "homepage": "https://github.com/misterhat/omdb",
+  "homepage": "https://github.com/LesClams/omdb",
   "scripts": {
     "test": "node test.js"
   }
