@@ -4,7 +4,7 @@ A simple Node.JS module to access and normalize data from the
 
 ## Installation
 ```bash
-npm install --save omdb
+npm install --save clams-omdb
 ```
 ## Examples
 

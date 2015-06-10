@@ -1,6 +1,6 @@
 {
   "name": "clams-omdb",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "author": "anault",
   "description": "A module to access OMDb API.",
   "keywords": [
