@@ -76,11 +76,13 @@ Run a single media request on the API.
 
 `terms` is assumed to be one of the following, respectively:
 
-    `{ imdb: 'tt0387564' }`
-    `{ title: 'Saw' }`
-    `{ title: 'Saw', year: 2004 }`
-    `{ title: 'Game of Thrones', season: 1 }`
-    `{ title: 'Game of Thrones', season: 1, episode: 2 }`
+```javascript
+{ imdb: 'tt0387564' }
+{ title: 'Saw' }
+{ title: 'Saw', year: 2004 }
+{ title: 'Game of Thrones', season: 1 }
+{ title: 'Game of Thrones', season: 1, episode: 2 }
+```
 
 `callback` returns an object of the movie's information. If no movies are
 found, it will return `null`.
