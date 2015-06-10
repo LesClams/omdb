@@ -1,5 +1,4 @@
 var tap = require('tap').test,
-
     omdb = require('./');
 
 var SEARCH_PROPERTIES = [ 'title', 'year', 'imdb', 'type' ];
@@ -35,5 +34,15 @@ tap('specific movie', function (test) {
     omdb.get('tt0057012', function (err, movie) {
         test.notOk(err, 'no errors');
         test.ok(movie, 'movie exists');
+    });
+});
+
+tap('specific episode', function (test) {
+    test.plan(2);
+
+    omdb.get({title: 'Game of Thrones', season: 5, episode: 7}, function (err, episode) {
+        //console.log(episode);
+        test.notOk(err, 'no errors');
+        test.ok(episode, 'episode exists');
     });
 });

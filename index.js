@@ -110,41 +110,42 @@ module.exports.get = (function () {
         return +votes.match(/\d/g).join('');
     };
 
-    return function (show, fullPlot, done) {
+    return function (terms, done) {
         var query = {};
 
-        // If the third argument is omitted, treat the second argument as the
-        // callback.
-        if (!done) {
-            done = fullPlot;
-            fullPlot = false;
-        }
-
-        query.plot = fullPlot ? 'full' : 'short';
+        query.plot = 'full';
 
         // Select query based on explicit IMDB ID, explicit title, title & year,
         // IMDB ID and title, respectively.
-        if (show.imdb) {
-            query.i = show.imdb;
-        } else if (show.title) {
-            query.t = show.title;
-
+        if (terms.imdb) {
+            query.i = terms.imdb;
+        }
+        else if (terms.title) {
+            query.t = terms.title;
             // In order to search with a year, a title must be present.
-            if (show.year) {
-                query.y = show.year;
+            if (terms.year) {
+                query.y = terms.year;
+            }
+            if (terms.season) {
+                query.Season = terms.season;
+                if (terms.episode) {
+                    query.Episode = terms.episode;
+                }
             }
 
         // Assume anything beginning with "tt" and ending with digits is an
         // IMDB ID.
-        } else if (/^tt\d+$/.test(show)) {
-            query.i = show;
+        }
+        else if (/^tt\d+$/.test(terms)) {
+            query.i = terms;
 
         // Finally, assume options is a string repesenting the title.
-        } else {
-            query.t = show;
+        }
+        else {
+            query.t = terms;
         }
 
-        needle.request('get', HOST, query, function (err, res, movie) {
+        needle.request('get', HOST, query, function (err, res, media) {
             if (err) {
                 return done(err);
             }
@@ -154,51 +155,54 @@ module.exports.get = (function () {
             }
 
             // The movie being searched for could not be found.
-            if (movie.Response === 'False') {
+            if (media.Response === 'False') {
                 return done(null, null);
             }
 
             // Replace 'N/A' strings with null for simple checks in the return
             // value.
-            Object.keys(movie).forEach(function (key) {
-                if (movie[key] === 'N/A') {
-                    movie[key] = null;
+            Object.keys(media).forEach(function (key) {
+                if (media[key] === 'N/A') {
+                    media[key] = null;
                 }
             });
 
             // Beautify and normalize the ugly results the API returns.
             done(null, {
-                title: movie.Title,
-                year: formatYear(movie.Year),
-                rated: movie.Rated,
+                title: media.Title,
+                year: formatYear(media.Year),
+                rated: media.Rated,
+                
+                season: (media.Season) ? media.Season : null,
+                episode: (media.Episode) ? media.Episode : null,
 
                 // Cast the API's release date as a native JavaScript Date type.
-                released: movie.Released ? new Date(movie.Released) : null,
+                released: media.Released ? new Date(media.Released) : null,
 
                 // Return runtime as minutes casted as a Number instead of an
                 // arbitrary string.
-                runtime: movie.Runtime ? formatRuntime(movie.Runtime) : null,
+                runtime: media.Runtime ? formatRuntime(media.Runtime) : null,
 
-                countries: movie.Country ? movie.Country.split(', ') : null,
-                genres: movie.Genre ? movie.Genre.split(', ') : null,
-                director: movie.Director,
-                writers: movie.Writer ? movie.Writer.split(', ') : null,
-                actors: movie.Actors ? movie.Actors.split(', ') : null,
-                plot: movie.Plot,
+                countries: media.Country ? media.Country.split(', ') : null,
+                genres: media.Genre ? media.Genre.split(', ') : null,
+                director: media.Director,
+                writers: media.Writer ? media.Writer.split(', ') : null,
+                actors: media.Actors ? media.Actors.split(', ') : null,
+                plot: media.Plot,
 
                 // A hotlink to a JPG of the movie poster on IMDB.
-                poster: movie.Poster,
+                poster: media.Poster,
 
                 imdb: {
-                    id: movie.imdbID,
-                    rating: movie.imdbRating ? +movie.imdbRating : null,
+                    id: media.imdbID,
+                    rating: media.imdbRating ? +media.imdbRating : null,
 
                     // Convert votes from a US formatted string of a number to
                     // a JavaScript Number.
-                    votes: movie.imdbVotes ? formatVotes(movie.imdbVotes) : null
+                    votes: media.imdbVotes ? formatVotes(media.imdbVotes) : null
                 },
 
-                type: movie.Type
+                type: media.Type
             });
         });
     };
