@@ -1,7 +1,7 @@
 var tap = require('tap').test,
     omdb = require('./');
 
-var SEARCH_PROPERTIES = [ 'title', 'year', 'imdb', 'type' ];
+var SEARCH_PROPERTIES = [ 'title', 'year', 'imdb', 'type', 'poster' ];
 
 tap('correct searching', function (test) {
     test.plan(2 + SEARCH_PROPERTIES.length);

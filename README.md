@@ -67,7 +67,9 @@ is empty. The array will contain objects of the following:
     // Otherwise,
     year: Number,
 
-    imdb: String
+    imdb: String,
+    
+    poster : String,  // url to the poster
 }
 ```
 

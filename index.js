@@ -82,7 +82,8 @@ module.exports.search = function (terms, done) {
                 title: movie.Title,
                 year: formatYear(movie.Year),
                 imdb: movie.imdbID,
-                type: movie.Type
+                type: movie.Type,
+                poster : movie.Poster
             };
         }));
     });
